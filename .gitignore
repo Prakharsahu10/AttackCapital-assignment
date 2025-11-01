@@ -31,7 +31,12 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
-.env*
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+!.env.example
 
 # vercel
 .vercel
@@ -39,3 +44,29 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+python-service/venv/
+python-service/.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
