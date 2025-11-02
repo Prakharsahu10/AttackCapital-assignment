@@ -1,30 +1,30 @@
 /**
  * AMD Strategy Types
  */
-export type AMDStrategy = "twilio-native" | "jambonz" | "huggingface" | "gemini-flash";
+export type AMDStrategy = "TWILIO_NATIVE" | "JAMBONZ" | "HUGGINGFACE" | "GEMINI_FLASH";
 
 /**
  * Call Status Types
  */
 export type CallStatus =
-  | "initiated"
-  | "ringing"
-  | "in-progress"
-  | "completed"
-  | "failed"
-  | "busy"
-  | "no-answer"
-  | "canceled";
+  | "INITIATED"
+  | "RINGING"
+  | "IN_PROGRESS"
+  | "COMPLETED"
+  | "FAILED"
+  | "BUSY"
+  | "NO_ANSWER"
+  | "CANCELED";
 
 /**
  * AMD Detection Result
  */
-export type AMDResult = "human" | "machine" | "voicemail" | "fax" | "unknown";
+export type AMDResult = "HUMAN" | "MACHINE" | "VOICEMAIL" | "FAX" | "UNKNOWN";
 
 /**
  * Call Direction
  */
-export type CallDirection = "inbound" | "outbound";
+export type CallDirection = "INBOUND" | "OUTBOUND";
 
 /**
  * Call Record Interface

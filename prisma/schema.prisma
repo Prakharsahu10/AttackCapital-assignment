@@ -1,0 +1,161 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// User Model - Authentication via Better-Auth
+// ============================================
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  password  String   
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  calls     Call[]
+  sessions  Session[]
+
+  @@index([email])
+  @@map("users")
+}
+
+// ============================================
+// Session Model - Better-Auth Sessions
+// ============================================
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+  @@map("sessions")
+}
+
+// ============================================
+// Call Model - Main Call Records
+// ============================================
+model Call {
+  id        String   @id @default(cuid())
+  userId    String
+  
+  // Call Details
+  phoneNumber   String
+  callDirection CallDirection @default(OUTBOUND)
+  callStatus    CallStatus    @default(INITIATED)
+  duration      Int           @default(0) // seconds
+  
+  // AMD Strategy & Results
+  amdStrategy AMDStrategy
+  amdResult   AMDResult?
+  confidence  Float?        // 0.0 - 1.0
+  detectionLatency Int?      // milliseconds
+  
+  // Twilio Integration
+  twilioCallSid String?    @unique
+  twilioStatus  String?
+  
+  // Error Handling
+  errorMessage String?
+  errorCode    String?
+  
+  // Metadata (flexible JSON for strategy-specific data)
+  metadata Json?
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  answeredAt DateTime?
+  endedAt    DateTime?
+  
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  logs CallLog[]
+
+  @@index([userId])
+  @@index([twilioCallSid])
+  @@index([callStatus])
+  @@index([amdStrategy])
+  @@index([createdAt])
+  @@map("calls")
+}
+
+// ============================================
+// CallLog Model - Detailed Event Logging
+// ============================================
+model CallLog {
+  id        String   @id @default(cuid())
+  callId    String
+  
+  // Event Details
+  event     String   // e.g., "initiated", "ringing", "amd_detected", "completed"
+  message   String?
+  level     LogLevel @default(INFO)
+  
+  // Additional Data
+  metadata  Json?
+  
+  // Timestamp
+  createdAt DateTime @default(now())
+  
+  // Relations
+  call Call @relation(fields: [callId], references: [id], onDelete: Cascade)
+
+  @@index([callId])
+  @@index([createdAt])
+  @@map("call_logs")
+}
+
+// ============================================
+// Enums
+// ============================================
+
+enum CallDirection {
+  INBOUND
+  OUTBOUND
+}
+
+enum CallStatus {
+  INITIATED
+  RINGING
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+  BUSY
+  NO_ANSWER
+  CANCELED
+}
+
+enum AMDStrategy {
+  TWILIO_NATIVE
+  JAMBONZ
+  HUGGINGFACE
+  GEMINI_FLASH
+}
+
+enum AMDResult {
+  HUMAN
+  MACHINE
+  VOICEMAIL
+  FAX
+  UNKNOWN
+}
+
+enum LogLevel {
+  DEBUG
+  INFO
+  WARN
+  ERROR
+}
