@@ -46,7 +46,15 @@ export function DialInterface({ onDial }: DialInterfaceProps) {
     const cleaned = value.replace(/\D/g, "");
     if (cleaned.length <= 3) return cleaned;
     if (cleaned.length <= 6) return `${cleaned.slice(0, 3)}-${cleaned.slice(3)}`;
-    return `${cleaned.slice(0, 3)}-${cleaned.slice(3, 6)}-${cleaned.slice(6, 10)}`;
+    if (cleaned.length <= 10) {
+      return `${cleaned.slice(0, 3)}-${cleaned.slice(3, 6)}-${cleaned.slice(6, 10)}`;
+    }
+    if (cleaned.length <= 11) {
+      // Handle 11 digit numbers (e.g., 1-800-XXX-XXXX)
+      return `${cleaned.slice(0, 1)}-${cleaned.slice(1, 4)}-${cleaned.slice(4, 7)}-${cleaned.slice(7, 11)}`;
+    }
+    // Handle 12-13 digit numbers (e.g., 91-831-873-4852 for India)
+    return `${cleaned.slice(0, 2)}-${cleaned.slice(2, 5)}-${cleaned.slice(5, 8)}-${cleaned.slice(8, 12)}`;
   };
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,7 +65,7 @@ export function DialInterface({ onDial }: DialInterfaceProps) {
 
   const validatePhoneNumber = (phone: string): boolean => {
     const cleaned = phone.replace(/\D/g, "");
-    return cleaned.length === 10 || cleaned.length === 11;
+    return cleaned.length >= 10 && cleaned.length <= 13;
   };
 
   const handleDial = async (e: React.FormEvent) => {
@@ -66,7 +74,7 @@ export function DialInterface({ onDial }: DialInterfaceProps) {
     setStatus("");
 
     if (!validatePhoneNumber(phoneNumber)) {
-      setError("Please enter a valid 10-digit phone number");
+      setError("Please enter a valid phone number (10-13 digits)");
       return;
     }
 
@@ -133,13 +141,13 @@ export function DialInterface({ onDial }: DialInterfaceProps) {
             id="phoneNumber"
             value={phoneNumber}
             onChange={handlePhoneChange}
-            placeholder="800-774-2678"
+            placeholder="800-774-2678 or 91-XXX-XXX-XXXX"
             className="w-full px-4 py-3 border border-zinc-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400"
             disabled={isDialing}
-            maxLength={12}
+            maxLength={17}
           />
           <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-            Format: 800-774-2678 (US/Canada numbers)
+            Format: 800-774-2678 (US) or 91-XXX-XXX-XXXX (International)
           </p>
         </div>
 

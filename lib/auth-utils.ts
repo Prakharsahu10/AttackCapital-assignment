@@ -1,24 +1,19 @@
 import { cookies } from "next/headers";
-import { auth } from "./auth";
+import { getSessionByToken } from "./auth";
 import { prisma } from "./db";
 
 // Get the current authenticated user session
 
 export async function getSession() {
   const cookieStore = await cookies();
-  const sessionToken = cookieStore.get("amd_auth");
+  const sessionToken = cookieStore.get("amd_auth_token");
 
   if (!sessionToken) {
     return null;
   }
 
   try {
-    const session = await auth.api.getSession({
-      headers: {
-        cookie: `amd_auth=${sessionToken.value}`,
-      },
-    });
-
+    const session = await getSessionByToken(sessionToken.value);
     return session;
   } catch (error) {
     console.error("Failed to get session:", error);
@@ -30,7 +25,7 @@ export async function getSession() {
 
 export async function getCurrentUser() {
   const session = await getSession();
-  
+
   if (!session?.user) {
     return null;
   }
@@ -48,11 +43,11 @@ export async function getCurrentUser() {
   return user;
 }
 
-// Require user to be authenticated, throw error 
+// Require user to be authenticated, throw error
 
 export async function requireAuth() {
   const user = await getCurrentUser();
-  
+
   if (!user) {
     throw new Error("Unauthorized");
   }
