@@ -10,10 +10,9 @@ import { CallRecord, AMDStrategy, AMDResult, CallStatus } from "@/types";
 
 interface CallHistoryProps {
   calls: CallRecord[];
-  onRefresh?: () => void;
 }
 
-export function CallHistory({ calls, onRefresh }: CallHistoryProps) {
+export function CallHistory({ calls }: CallHistoryProps) {
   const [filterStrategy, setFilterStrategy] = useState<AMDStrategy | "all">("all");
   const [filterStatus, setFilterStatus] = useState<CallStatus | "all">("all");
   const [currentPage, setCurrentPage] = useState(1);
@@ -93,27 +92,6 @@ export function CallHistory({ calls, onRefresh }: CallHistoryProps) {
     );
   };
 
-  const exportToCSV = () => {
-    const headers = ["Date", "Phone", "Strategy", "AMD Result", "Status", "Duration", "Confidence"];
-    const rows = filteredCalls.map((call) => [
-      formatDate(call.createdAt),
-      call.phoneNumber,
-      call.amdStrategy,
-      call.amdResult || "N/A",
-      call.callStatus,
-      call.duration.toString(),
-      call.confidence?.toFixed(2) || "N/A",
-    ]);
-
-    const csv = [headers, ...rows].map((row) => row.join(",")).join("\n");
-    const blob = new Blob([csv], { type: "text/csv" });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `call-history-${new Date().toISOString().split("T")[0]}.csv`;
-    a.click();
-  };
-
   return (
     <div className="w-full bg-white dark:bg-zinc-900 rounded-xl shadow-lg p-6">
       {/* Header */}
@@ -123,20 +101,6 @@ export function CallHistory({ calls, onRefresh }: CallHistoryProps) {
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
             {filteredCalls.length} call{filteredCalls.length !== 1 ? "s" : ""} found
           </p>
-        </div>
-        <div className="flex gap-2 mt-4 md:mt-0">
-          <button
-            onClick={onRefresh}
-            className="px-4 py-2 text-sm bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-900 dark:text-zinc-100 rounded-lg transition-colors"
-          >
-            Refresh
-          </button>
-          <button
-            onClick={exportToCSV}
-            className="px-4 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-          >
-            Export CSV
-          </button>
         </div>
       </div>
 

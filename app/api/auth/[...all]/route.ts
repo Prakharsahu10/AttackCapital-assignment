@@ -1,4 +1,4 @@
-import { signIn, signOut } from "@/lib/auth";
+import { signIn, signOut, signUp } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
@@ -26,6 +26,41 @@ export async function POST(request: NextRequest) {
       return NextResponse.redirect(new URL("/login?error=Invalid credentials", url), {
         status: 303,
       });
+    }
+
+    // Set session cookie
+    const cookieStore = await cookies();
+    const session = await prisma.session.findFirst({
+      where: { userId: result.user!.id },
+      orderBy: { createdAt: "desc" },
+    });
+
+    if (session) {
+      cookieStore.set("amd_auth_token", session.token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        maxAge: 60 * 60 * 24 * 7, // 7 days
+        path: "/",
+      });
+    }
+
+    return NextResponse.redirect(new URL("/", url), { status: 303 });
+  }
+
+  if (pathname === "/api/auth/signup") {
+    const formData = await request.formData();
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+    const name = formData.get("name") as string;
+
+    const result = await signUp(email, password, name);
+
+    if (!result.success) {
+      return NextResponse.redirect(
+        new URL(`/signup?error=${encodeURIComponent(result.error || "Signup failed")}`, url),
+        { status: 303 }
+      );
     }
 
     // Set session cookie

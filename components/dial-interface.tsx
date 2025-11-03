@@ -174,45 +174,6 @@ export function DialInterface({ onDial }: DialInterfaceProps) {
           </select>
         </div>
 
-        {/* Test Numbers Helper */}
-        <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-          <p className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-2">
-            Test Numbers (Voicemail):
-          </p>
-          <ul className="text-xs text-blue-800 dark:text-blue-200 space-y-1">
-            <li>
-              • Costco:{" "}
-              <button
-                type="button"
-                onClick={() => setPhoneNumber("800-774-2678")}
-                className="underline hover:text-blue-600"
-              >
-                800-774-2678
-              </button>
-            </li>
-            <li>
-              • Nike:{" "}
-              <button
-                type="button"
-                onClick={() => setPhoneNumber("800-806-6453")}
-                className="underline hover:text-blue-600"
-              >
-                800-806-6453
-              </button>
-            </li>
-            <li>
-              • PayPal:{" "}
-              <button
-                type="button"
-                onClick={() => setPhoneNumber("888-221-1161")}
-                className="underline hover:text-blue-600"
-              >
-                888-221-1161
-              </button>
-            </li>
-          </ul>
-        </div>
-
         {/* Error Message */}
         {error && (
           <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg p-4">

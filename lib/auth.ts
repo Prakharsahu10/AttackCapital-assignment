@@ -52,6 +52,52 @@ export async function signIn(email: string, password: string): Promise<AuthResul
 }
 
 /**
+ * Sign up a new user
+ */
+export async function signUp(email: string, password: string, name?: string): Promise<AuthResult> {
+  try {
+    // Check if user already exists
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (existingUser) {
+      return { success: false, error: "Email already registered" };
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create user
+    const user = await prisma.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+        name: name || null,
+      },
+      select: { id: true, email: true, name: true },
+    });
+
+    // Create session
+    await prisma.session.create({
+      data: {
+        userId: user.id,
+        token: crypto.randomUUID(),
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+      },
+    });
+
+    return {
+      success: true,
+      user: { id: user.id, email: user.email, name: user.name || undefined },
+    };
+  } catch (error) {
+    console.error("Sign up error:", error);
+    return { success: false, error: "Failed to create account" };
+  }
+}
+
+/**
  * Sign out
  */
 export async function signOut(sessionToken: string): Promise<void> {
