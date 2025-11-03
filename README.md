@@ -134,6 +134,7 @@ npm run dev
 ## 📦 Tech Stack
 
 ### Frontend
+
 - **Framework**: Next.js 14+ (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS v4
@@ -141,6 +142,7 @@ npm run dev
 - **State Management**: React Hooks
 
 ### Backend
+
 - **API**: Next.js API Routes
 - **Database**: SQLite
 - **ORM**: Prisma
@@ -148,6 +150,7 @@ npm run dev
 - **Validation**: Zod
 
 ### Integrations
+
 - **Telephony**: Twilio Voice API
 - **Tunneling**: Cloudflare Tunnel
 - **Version Control**: Git + GitHub
@@ -157,18 +160,21 @@ npm run dev
 ## 🎨 Features Implemented
 
 ### ✅ Phase 1: Initial Setup
+
 - Next.js 14+ project with TypeScript
 - Tailwind CSS v4 configuration
 - ESLint & Prettier setup
 - Git repository initialization
 
 ### ✅ Phase 2: Database & Authentication
+
 - Prisma schema design (User, Session, Call, CallLog)
 - SQLite database setup
 - Custom authentication system
 - Session management with JWT
 
 ### ✅ Phase 3: UI Components
+
 - Dashboard with stats cards
 - Dial interface with phone number formatting
 - Call history table with filtering
@@ -176,6 +182,7 @@ npm run dev
 - Dark mode support
 
 ### ✅ Phase 4: Twilio Native AMD
+
 - Twilio Voice API integration
 - AMD configuration with async callbacks
 - Three webhook handlers:
@@ -234,14 +241,17 @@ enum AMDResult {
 ## 🔌 API Endpoints
 
 ### Authentication
+
 - `POST /api/auth/signin` - User login
 - `POST /api/auth/signup` - User registration
 - `POST /api/auth/signout` - User logout
 
 ### Calls
+
 - `POST /api/dial` - Initiate outbound call with AMD
 
 ### Webhooks (Twilio)
+
 - `POST /api/webhooks/twilio/voice` - TwiML voice instructions
 - `POST /api/webhooks/twilio/status` - Call status updates
 - `POST /api/webhooks/twilio/amd` - AMD detection results
@@ -250,12 +260,12 @@ enum AMDResult {
 
 ## 📊 AMD Strategies
 
-| Strategy | Status | Latency | Accuracy | Cost |
-|----------|--------|---------|----------|------|
-| **Twilio Native** | ✅ Complete | ~2-3s | High | Low |
-| **Jambonz SIP** | 🔜 Planned | ~2-4s | High | Medium |
-| **Hugging Face ML** | 🔜 Planned | ~1-2s | Very High | Medium |
-| **Gemini Flash AI** | 🔜 Planned | ~2-3s | Very High | High |
+| Strategy            | Status      | Latency | Accuracy  | Cost   |
+| ------------------- | ----------- | ------- | --------- | ------ |
+| **Twilio Native**   | ✅ Complete | ~2-3s   | High      | Low    |
+| **Jambonz SIP**     | 🔜 Planned  | ~2-4s   | High      | Medium |
+| **Hugging Face ML** | 🔜 Planned  | ~1-2s   | Very High | Medium |
+| **Gemini Flash AI** | 🔜 Planned  | ~2-3s   | Very High | High   |
 
 ---
 
@@ -313,12 +323,14 @@ feat/jambonz-amd
 ## 📝 Testing
 
 ### Test Credentials
+
 ```
 Email: test@example.com
 Password: password123
 ```
 
 ### Verified Numbers
+
 For Twilio trial accounts, verify your phone number at:
 https://console.twilio.com/us1/develop/phone-numbers/manage/verified
 

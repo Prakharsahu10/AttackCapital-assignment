@@ -53,6 +53,7 @@ export async function POST(request: NextRequest) {
       answeredAt?: Date;
       endedAt?: Date;
     } = {
+      
       callStatus: mappedStatus,
       twilioStatus: callStatus,
     };
